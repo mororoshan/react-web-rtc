@@ -10,12 +10,13 @@ import { User } from "./classes/User";
 import store from "../../utils/stores/WebRTS.store";
 import { observer } from "mobx-react-lite";
 import QRCode from "qrcode.react";
+import { send } from "process";
 
 type ConnectionProps = {
     remoteDescription?: RTCSessionDescription;
     testKey: number;
     name: string;
-    preparedUser: User;
+    user: User;
     handleAddUsers: (names: string[]) => void;
 };
 
@@ -24,7 +25,7 @@ const Connect = observer(
         remoteDescription,
         testKey,
         name,
-        preparedUser,
+        user,
         handleAddUsers,
     }: ConnectionProps) => {
         const [isPeerOnSameNetwork, setIsPeerOnSameNetwork] = useState(true);
@@ -32,9 +33,14 @@ const Connect = observer(
         const [thisConnectedUser, setThisConnectedUser] = useState("");
         const isConnected = useRef<boolean>(false);
         const usersInNet = useRef<number>();
-        const user = useRef<User>(preparedUser);
-        const handleSendOfferRef = useRef<() => Promise<void>>();
-     
+        const handleSendOfferRef = useRef<() => void>();
+        const handleReceiveAnswerOfferFnRef =
+            useRef<(User: User, from: string, offer: string) => void>();
+        const handledAnswerOfferFnRef =
+            useRef<(to: string, ld: string) => void>();
+        const handleNewPersonFnRef =
+            useRef<(User: User, offer: string) => void>();
+
         const [messages, setMessages] = useState<
             { from: string; value: string }[]
         >([]);
@@ -55,54 +61,76 @@ const Connect = observer(
             useIceServer: !isPeerOnSameNetwork,
         });
 
-       
-
         const askForUsersInNet = async () => {
             sendMessage("ask-for-users", undefined);
         };
 
         const handleCheckForUsers = async () => {
-            const thisUser = store.users?.find(
-                (u) => u.name === user.current.name
-            );
-            if (!thisUser || !thisUser.sendMassage) {
+            const thisUser = store.users?.find((u) => u.name === user.name);
+            if (!thisUser || !thisUser.sendMessage) {
                 return;
             }
-            thisUser.sendMassage("connected-users", {
+            thisUser.sendMessage("connected-users", {
                 userId: store.users
                     .map((user) => user.name)
                     .filter((e) => e !== ""),
             });
         };
 
-        const handleSetLocalDescriptionForUser = () => {
-            if (!user.current.name) return;
-            console.log(
-                "localDescription is set for",
-                user.current.name,
-                "offer: ",
-                localDescription
-            );
-
-            store.users
-                .find((user) => user.name === name)
-                ?.setLocalDescription(localDescription);
+        const handleSetLocalDescriptionForUser = (ld: string) => {
+            user.setLocalDescription(ld);
         };
 
-        const handleSendOffer = async () => {
-            console.log("handleSendOffer called");
-
-            const usersWithOffers = store.users.map((user) => ({
+        const getUsersFromStore = () => {
+            return store.usersArray.map((user) => ({
                 userId: user.name,
                 offer: JSON.stringify(user.localRTCSession),
             }));
-
-            console.log("usersWithOffers:", usersWithOffers);
-
-            sendMessage("sending-offers", usersWithOffers);
         };
 
+        const handleSendOfferToUser = (u: User, offer: string) => {
+            if (u.sendMessage) {
+                u.sendMessage("sending-offer-from-new", {
+                    userId: user.name,
+                    offer: offer,
+                });
+            }
+        };
+
+        const handleSendOffer = async () => {
+            let usersFromStore: ReturnType<typeof getUsersFromStore>;
+            setTimeout(() => {
+                usersFromStore = getUsersFromStore();
+                console.log("usersWithOffers:", usersFromStore);
+                sendMessage("sending-offers", usersFromStore);
+            }, 500);
+        };
+
+        const sendAnswerOffer = async (to: string, ld: string) => {
+            setTimeout(() => {
+                console.log("send answer offer", localDescription);
+                sendMessage("sending-answer-offer", {
+                    to,
+                    userId: name,
+                    offer: store.users.find((u) => u.name === to)?.localRTCSession || '',
+                });
+            }, 3500);
+        };
+
+        const handleReceiveAnswerOffer = async (
+            u: User,
+            from: string,
+            answer: string
+        ) => {
+            if (u.sendMessage) {
+                u.sendMessage("receive-answer-offer", { userId: from, answer });
+            }
+        };
+
+        handledAnswerOfferFnRef.current = sendAnswerOffer;
         handleSendOfferRef.current = handleSendOffer;
+        handleNewPersonFnRef.current = handleSendOfferToUser;
+        handleReceiveAnswerOfferFnRef.current = handleReceiveAnswerOffer;
 
         const handleAddUser = async () => {
             sendMessage("add-user", {
@@ -112,15 +140,19 @@ const Connect = observer(
             });
         };
 
-        useEffect(() => {            
+        useEffect(() => {
+            if (!localDescription) return;
+            handleSetLocalDescriptionForUser(localDescription);
+            user.setRemoteDescription = setRemoteDescription;
+        }, [isLocalDescriptionReady]);
+
+        useEffect(() => {
             if (connectionState && connectionState === "connected") {
-                user.current.setSendMassage(sendMessage as TSendCallback);
+                user.setSendMassage(sendMessage as TSendCallback);
                 setTimeout(() => {
                     console.log("Connected to peer");
                     handleAddUser().then(() => {
                         if (store.users.length === 1) {
-                            console.log("what", store.users.find(storeUser => storeUser.randomKey === user.current.randomKey))
-
                             askForUsersInNet();
                         }
                     });
@@ -167,13 +199,8 @@ const Connect = observer(
             const unregisterAddUser = registerEventHandler(
                 "add-user",
                 (message) => {
-                    console.log("Received add-user:", message.data);
-                    setThisConnectedUser(message.data.name);
-                    if (user?.current) {
-                        user.current.setName(message.data.name);
-                        store.users
-                            ?.find((e) => e.name === "")
-                            ?.setName(message.data.name);
+                    if (user) {
+                        user.setName(message.data.name);
                         usersInNet.current = message.data.usersInNet;
                     }
                 }
@@ -182,7 +209,6 @@ const Connect = observer(
             const unregisterAskForUsers = registerEventHandler(
                 "ask-for-users",
                 (message) => {
-                    console.log("Received ask-for-users:", message.data);
                     handleCheckForUsers();
                 }
             );
@@ -191,6 +217,78 @@ const Connect = observer(
                 "sending-offers",
                 (message) => {
                     console.log("received sending offers", message);
+                    message.data.forEach((offer) => {
+                        const u = store.users.find(
+                            (user) => user.name === offer.userId
+                        );
+                        if (handleNewPersonFnRef?.current && u && offer.offer)
+                            handleNewPersonFnRef?.current(u, offer.offer);
+                    });
+                }
+            );
+
+            const unregisterSendOfferFromNew = registerEventHandler(
+                "sending-offer-from-new",
+                (message) => {
+                    handleAddUsers([message.data.userId]);
+                    const u = store.users.find(
+                        (user) => user.name === message.data.userId
+                    );
+
+                    setTimeout(() => {
+                        if (u && u.setRemoteDescription) {
+                            u.remoteRTCSession = message.data.offer;
+                            u.setRemoteDescription(
+                                JSON.parse(message.data.offer)
+                            );
+                        }
+                    }, 500);
+
+                    console.log(u?.localRTCSession)
+                    setTimeout(() => {
+                        if (handledAnswerOfferFnRef?.current && u)
+                            handledAnswerOfferFnRef?.current(
+                                message.data.userId,
+                                u.localRTCSession
+                            );
+                    }, 500);
+                }
+            );
+
+            const unregisterSendAnswerOffer = registerEventHandler(
+                "sending-answer-offer",
+                (message) => {
+                    console.log("received sending answer offer", message);
+                    const us = store.users.find(
+                        (u) => u.name === message.data.to
+                    );
+                    setTimeout(() => {
+                        if (
+                            us &&
+                            us.sendMessage &&
+                            handleReceiveAnswerOfferFnRef.current
+                        ) {
+                            handleReceiveAnswerOfferFnRef.current(
+                                us,
+                                message.data.userId,
+                                message.data.offer
+                            );
+                        }
+                    }, 1000);
+                }
+            );
+
+            const unregisterAskForUsersInNet = registerEventHandler(
+                "receive-answer-offer",
+                (message) => {
+                    console.log("received receive-answer-offer", message);
+                    const us = store.users.find(
+                        (u) => u.name === message.data.userId
+                    );
+                    if (us && us.setRemoteDescription) {
+                        us.remoteRTCSession = message.data.answer;
+                        us.setRemoteDescription(message.data.answer);
+                    }
                 }
             );
 
@@ -202,30 +300,22 @@ const Connect = observer(
                 unregisterSendInfoAboutOtherUsers();
                 unregisterAskForUsers();
                 unregisterSendingOffers();
+                unregisterSendOfferFromNew();
+                unregisterSendAnswerOffer();
+                unregisterAskForUsersInNet();
             };
         }, [registerEventHandler]);
 
         return (
             <div>
-                <ul>
-                    {store.users.map((user) => {
-                        return <li key={user.name}>
-                            <div>user.name: {user.name}</div>
-                            <div>user.offer: {user.localRTCSession?"Its there trust me": "nope"}</div>
-                        </li>;
-                    })}
-                </ul>
-                {user?.current?.name && <h1>{user.current.name}</h1>}
-                {/* <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "100%",
+                {user.name && <h1>{user.name}</h1>}
+                <button
+                    onClick={() => {
+                        store.users[0].name = store.users[0].name + "1";
                     }}
                 >
-                    <QRCode value={localDescription} size={256} />
-                </div> */}
+                    XXXX
+                </button>
 
                 <ConnectionWidget
                     connectionState={connectionState}

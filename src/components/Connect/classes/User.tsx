@@ -9,7 +9,7 @@ export class User {
     public randomKey: number;
     public localRTCSession: string;
     public remoteRTCSession?: string;
-    public sendMassage?: TSendCallback | null;
+    public sendMessage?: TSendCallback | null;
 
     public setRemoteDescription?: (
         remoteDescriptionString: string
@@ -32,7 +32,7 @@ export class User {
     }
 
     setSendMassage(fn: TSendCallback) {
-        this.sendMassage = fn;
+        this.sendMessage = fn;
     }
 
     setName(name: string) {
@@ -40,7 +40,7 @@ export class User {
     }
 
     handleSendMassage(massage: TMassageTypes, data: Messages["data"]) {
-        if (!this.sendMassage) return;
-        this.sendMassage(massage, data);
+        if (!this.sendMessage) return;
+        this.sendMessage(massage, data);
     }
 }

@@ -23,12 +23,12 @@ const ConnectionPage = observer((props: Props) => {
         <>
             <h1>MY NAME IS {store.name}</h1>
             <section>
-                {store.users.map((user, i) => (
+                {store.users.map((user) => (
                     <Fragment key={user.randomKey}>
                         <Connect
                             testKey={0}
                             name={store.name}
-                            preparedUser={user}
+                            user={user}
                             handleAddUsers={handleAddUser}
                         />
                     </Fragment>
@@ -37,12 +37,13 @@ const ConnectionPage = observer((props: Props) => {
             <button onClick={() => handleAddUser()}>+</button>
             {store.users.length > 0 && (
                 <button
-                    onClick={() =>
+                    onClick={() => {
+                        console.log(store.usersArray);
                         store.sendMassageToAll("text-message", {
                             from: "nice cock",
                             value: "awesome balls",
-                        })
-                    }
+                        });
+                    }}
                 >
                     Send Json Data
                 </button>

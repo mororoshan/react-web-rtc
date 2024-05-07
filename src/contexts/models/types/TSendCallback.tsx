@@ -15,7 +15,9 @@ export type Messages =
     | SendingAnswerOfferMessage
     | SendingOffersMessage
     | SendingAnswersMessage
-    | AskForUsersMessage;
+    | AskForUsersMessage
+    | SendNewPersonOfferPersonMessage
+    | SendReceiveAnswerOfferMessage;
 
 export type TMassageTypes =
     | "text-message"
@@ -27,7 +29,9 @@ export type TMassageTypes =
     | "sending-answer-offer"
     | "sending-offers"
     | "sending-answers"
-    | "ask-for-users";
+    | "ask-for-users"
+    | "sending-offer-from-new"
+    | "receive-answer-offer";
 
 export type TextMessage = BaseMessage<
     "text-message",
@@ -40,7 +44,10 @@ export type JSONDataMassage = BaseMessage<
     { data: string; from: string }
 >;
 
-export type AddUserMessage = BaseMessage<"add-user", { name: string, usersInNet: number }>;
+export type AddUserMessage = BaseMessage<
+    "add-user",
+    { name: string; usersInNet: number }
+>;
 export type RemoveUserMessage = BaseMessage<"remove-user", { name: string }>;
 export type SendReplyOfferMessage = BaseMessage<
     "sending-reply-offer-user",
@@ -61,15 +68,25 @@ export type CreateNewConnectionMessage = BaseMessage<
 
 export type SendingAnswerOfferMessage = BaseMessage<
     "sending-answer-offer",
-    { userId: string; offer: string }
+    { to: string, userId: string; offer: string }
 >;
 
 export type SendingOffersMessage = BaseMessage<
     "sending-offers",
-    { userId: string; offer: string | undefined  }[]
+    { userId: string; offer: string | undefined }[]
 >;
 
 export type SendingAnswersMessage = BaseMessage<
     "sending-answers",
     { data: { userId: string; answer: string | undefined }[] }
 >;
+
+export type SendNewPersonOfferPersonMessage = BaseMessage<
+    "sending-offer-from-new",
+    { userId: string; offer: string }
+>;
+
+export type SendReceiveAnswerOfferMessage = BaseMessage<"receive-answer-offer", {
+    userId: string;
+    answer: string;
+}>;

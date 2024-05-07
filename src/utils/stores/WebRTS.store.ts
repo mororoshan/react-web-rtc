@@ -1,11 +1,11 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, observable } from "mobx";
 import { User } from "../../components/Connect/classes/User";
 import { Messages, TMassageTypes } from "../../contexts/models/types/TSendCallback";
 
 class WebRTCStore {
-    users: User[] = [new User('')];
+    users: User[] = observable([new User('')]);
     name: string = "";
-
+    
     constructor() {
         makeAutoObservable(this);
 
@@ -14,6 +14,12 @@ class WebRTCStore {
             .then((data) => {
                 this.name = data.results[0].name.first;
             });
+    }
+
+
+
+    get usersArray () {
+        return this.users;    
     }
 
     addUsers(user: User[]) {
