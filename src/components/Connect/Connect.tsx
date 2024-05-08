@@ -101,14 +101,12 @@ const Connect = observer(
             let usersFromStore: ReturnType<typeof getUsersFromStore>;
             setTimeout(() => {
                 usersFromStore = getUsersFromStore();
-                console.log("usersWithOffers:", usersFromStore);
                 sendMessage("sending-offers", usersFromStore);
             }, 500);
         };
 
         const sendAnswerOffer = async (to: string, ld: string) => {
             setTimeout(() => {
-                console.log("send answer offer", localDescription);
                 sendMessage("sending-answer-offer", {
                     to,
                     userId: name,
@@ -150,7 +148,6 @@ const Connect = observer(
             if (connectionState && connectionState === "connected") {
                 user.setSendMassage(sendMessage as TSendCallback);
                 setTimeout(() => {
-                    console.log("Connected to peer");
                     handleAddUser().then(() => {
                         if (store.users.length === 1) {
                             askForUsersInNet();
@@ -164,10 +161,6 @@ const Connect = observer(
             const unregisterSendInfoAboutOtherUsers = registerEventHandler(
                 "connected-users",
                 (message) => {
-                    console.log("received connected-users", message);
-
-                    console.log(usersInNet.current, store.users.length);
-
                     handleAddUsers(
                         message.data.userId.filter((e) => e !== name)
                     );
@@ -180,7 +173,6 @@ const Connect = observer(
             const unregisterTextMessage = registerEventHandler(
                 "text-message",
                 (message) => {
-                    console.log("Received text-message:", message.data);
                     addMessage(message.data);
                 }
             );
@@ -216,7 +208,6 @@ const Connect = observer(
             const unregisterSendingOffers = registerEventHandler(
                 "sending-offers",
                 (message) => {
-                    console.log("received sending offers", message);
                     message.data.forEach((offer) => {
                         const u = store.users.find(
                             (user) => user.name === offer.userId
@@ -258,7 +249,6 @@ const Connect = observer(
             const unregisterSendAnswerOffer = registerEventHandler(
                 "sending-answer-offer",
                 (message) => {
-                    console.log("received sending answer offer", message);
                     const us = store.users.find(
                         (u) => u.name === message.data.to
                     );
@@ -281,7 +271,6 @@ const Connect = observer(
             const unregisterAskForUsersInNet = registerEventHandler(
                 "receive-answer-offer",
                 (message) => {
-                    console.log("received receive-answer-offer", message);
                     const us = store.users.find(
                         (u) => u.name === message.data.userId
                     );
