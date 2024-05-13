@@ -3,10 +3,12 @@ import Connect from "../components/Connect/Connect";
 import { observer } from "mobx-react-lite";
 import store from "../utils/stores/WebRTS.store";
 import { User } from "../components/Connect/classes/User";
+import Button from "../components/ui/Button/Button";
 
 type Props = {};
 
-const ConnectionPage = observer((props: Props) => {
+const ConnectionPage = observer((props: Props) => {   
+
     if (!store.name) {
         return <div>Loading</div>;
     }
@@ -22,7 +24,7 @@ const ConnectionPage = observer((props: Props) => {
     return (
         <>
             <h1>MY NAME IS {store.name}</h1>
-            <section>
+            <section className="flex flex-wrap gap-16">
                 {store.users.map((user) => (
                     <Fragment key={user.randomKey}>
                         <Connect
@@ -34,9 +36,9 @@ const ConnectionPage = observer((props: Props) => {
                     </Fragment>
                 ))}
             </section>
-            <button onClick={() => handleAddUser()}>+</button>
+            <Button onClick={() => handleAddUser()}>+</Button>
             {store.users.length > 0 && (
-                <button
+                <Button
                     onClick={() => {
                         console.log(store.usersArray);
                         store.sendMassageToAll("text-message", {
@@ -46,7 +48,7 @@ const ConnectionPage = observer((props: Props) => {
                     }}
                 >
                     Send Json Data
-                </button>
+                </Button>
             )}
         </>
     );

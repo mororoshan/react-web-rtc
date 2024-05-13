@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { LegacyRef, useEffect, useRef, useState } from "react";
 import { useServerlessWebRTC } from "../../utils/hooks/ServerlessWebRTC";
 import { ConnectionWidget } from "./ConnectionWidget/ConnectionWidget";
 import {
@@ -11,6 +11,9 @@ import store from "../../utils/stores/WebRTS.store";
 import { observer } from "mobx-react-lite";
 import QRCode from "qrcode.react";
 import { send } from "process";
+import Button from "../ui/Button/Button";
+import Input from "../ui/Input/Input";
+import { useForm } from "react-hook-form";
 
 type ConnectionProps = {
     remoteDescription?: RTCSessionDescription;
@@ -44,6 +47,17 @@ const Connect = observer(
         const [messages, setMessages] = useState<
             { from: string; value: string }[]
         >([]);
+
+        const {
+            register,
+            handleSubmit,
+            watch,
+            getValues,
+            setFocus,
+            resetField,
+        } = useForm<{ chatMessage: string }>({
+            mode: "onChange",
+        });
 
         const addMessage = (newMessage: TextMessage["data"]) => {
             setMessages((prev) => [...prev, newMessage]);
@@ -110,9 +124,11 @@ const Connect = observer(
                 sendMessage("sending-answer-offer", {
                     to,
                     userId: name,
-                    offer: store.users.find((u) => u.name === to)?.localRTCSession || '',
+                    offer:
+                        store.users.find((u) => u.name === to)
+                            ?.localRTCSession || "",
                 });
-            }, 3500);
+            }, 500);
         };
 
         const handleReceiveAnswerOffer = async (
@@ -140,6 +156,7 @@ const Connect = observer(
 
         useEffect(() => {
             if (!localDescription) return;
+            console.log(JSON.parse(localDescription).sdp);
             handleSetLocalDescriptionForUser(localDescription);
             user.setRemoteDescription = setRemoteDescription;
         }, [isLocalDescriptionReady]);
@@ -235,7 +252,7 @@ const Connect = observer(
                         }
                     }, 500);
 
-                    console.log(u?.localRTCSession)
+                    console.log(u?.localRTCSession);
                     setTimeout(() => {
                         if (handledAnswerOfferFnRef?.current && u)
                             handledAnswerOfferFnRef?.current(
@@ -296,15 +313,9 @@ const Connect = observer(
         }, [registerEventHandler]);
 
         return (
-            <div>
-                {user.name && <h1>{user.name}</h1>}
-                <button
-                    onClick={() => {
-                        store.users[0].name = store.users[0].name + "1";
-                    }}
-                >
-                    XXXX
-                </button>
+            <div className="border-black border">
+                {user.name && <h1 className="font-bold text-3xl">{user.name}</h1>}
+                
 
                 <ConnectionWidget
                     connectionState={connectionState}
@@ -314,22 +325,20 @@ const Connect = observer(
                 />
 
                 <div>
-                    <input
-                        value={messageValue}
-                        onChange={(e) => {
-                            setMessageValue(e.target.value);
-                        }}
-                    />
-                    <button
+                    <Input {...register("chatMessage")} />
+                    <Button
                         onClick={() => {
-                            const message = { value: messageValue, from: name };
+                            const message = {
+                                value: getValues("chatMessage"),
+                                from: name,
+                            };
                             sendMessage("text-message", message);
                             addMessage(message);
-                            setMessageValue("");
+                            resetField("chatMessage");
                         }}
                     >
                         Send Text Message
-                    </button>
+                    </Button>
                 </div>
                 <div>
                     <button
@@ -340,14 +349,17 @@ const Connect = observer(
                         Send Ping Message
                     </button>
                 </div>
-                <div>
+                <div className="border border-black w-64">
                     <p>Messages</p>
                     <ul>
-                        {messages.map((message, index) => (
-                            <li key={index}>
-                                {message.from}: {message.value}
-                            </li>
-                        ))}
+                        {messages.map(
+                            (message, index) =>
+                                index >= messages.length - 3 && (
+                                    <li key={index}>
+                                        {message.from}: {message.value}
+                                    </li>
+                                )
+                        )}
                     </ul>
                 </div>
             </div>

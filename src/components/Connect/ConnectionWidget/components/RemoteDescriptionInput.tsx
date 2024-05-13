@@ -1,30 +1,32 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ServerlessWebRTC } from "../ConnectionWidget";
+import { useForm } from "react-hook-form";
+import Input from "../../../ui/Input/Input";
+import Button from "../../../ui/Button/Button";
 
 export const RemoteDescriptionInput = ({
-  setRemoteDescription,
+    setRemoteDescription,
 }: {
-  setRemoteDescription: ServerlessWebRTC["setRemoteDescription"];
+    setRemoteDescription: ServerlessWebRTC["setRemoteDescription"];
 }) => {
-  const [remoteDescriptionString, setRemoteDescriptionString] = useState("");
-  return (
-    <div>
-      <input
-        value={remoteDescriptionString}
-        onChange={(e) => {
-          setRemoteDescriptionString(e.target.value);
-        }} />
-      <button
-        onClick={() => {
-          if (!remoteDescriptionString) return;
+    const { register, getValues } = useForm<{ remoteDescription: string }>({
+        mode: "onChange",
+    });
 
-          setRemoteDescription(remoteDescriptionString);
-        }}
-      >
-        Connect
-      </button>
-    </div>
-  );
+    return (
+        <div>
+            <Input {...register("remoteDescription")} />
+            <Button
+                onClick={() => {
+                    if (!getValues("remoteDescription")) return;
+
+                    setRemoteDescription(getValues("remoteDescription"));
+                }}
+            >
+                Connect
+            </Button>
+        </div>
+    );
 };
 
 export default RemoteDescriptionInput;

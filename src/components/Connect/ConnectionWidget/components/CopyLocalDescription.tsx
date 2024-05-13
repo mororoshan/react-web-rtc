@@ -1,3 +1,5 @@
+import Button from "../../../ui/Button/Button";
+
 const CopyLocalDescription = ({
     isLoading,
     localDescription,
@@ -5,18 +7,40 @@ const CopyLocalDescription = ({
     isLoading: boolean;
     localDescription: string | undefined;
 }) => {
+    const unsecuredCopyToClipboard = (text: string) => {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand("copy");
+        } catch (err) {
+            console.error("Unable to copy to clipboard", err);
+        }
+        document.body.removeChild(textArea);
+    };
+    
+    const copyToClipboard = (content: string) => {
+        if (window.isSecureContext && navigator.clipboard) {
+            navigator.clipboard.writeText(content);
+        } else {
+            unsecuredCopyToClipboard(content);
+        }
+    };
+
     return (
         <div>
-            <button
+            <Button
                 disabled={isLoading}
                 onClick={() => {
                     !isLoading &&
                         localDescription &&
-                        navigator.clipboard.writeText(localDescription);
+                        copyToClipboard(localDescription);
                 }}
             >
                 Copy local description
-            </button>
+            </Button>
         </div>
     );
 };

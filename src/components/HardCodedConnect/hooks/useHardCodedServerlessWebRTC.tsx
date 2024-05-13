@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { hardcodedSdpPairs } from "../hardcodedData/hardcodedSdpPairs";
 
 export type FindByType<Union, Type> = Union extends { type: Type }
     ? Union
@@ -20,7 +21,9 @@ export type ConnectionState =
     | "connected"
     | "disconnected";
 
-export type ServerlessWebRTC = ReturnType<typeof useServerlessWebRTC>;
+export type HardCodedServerlessWebRTC = ReturnType<
+    typeof useHardCodedServerlessWebRTC
+>;
 
 const defaultConfig: UseServerlessWebRTCConfig = {
     useIceServer: false,
@@ -57,7 +60,7 @@ function calculateConnectionState(
     return "disconnected";
 }
 
-export const useServerlessWebRTC = <
+export const useHardCodedServerlessWebRTC = <
     MessageTypes extends string,
     Message extends BaseMessage<MessageTypes, any>
 >(
@@ -92,6 +95,7 @@ export const useServerlessWebRTC = <
                     ? [{ urls: "stun:stun.l.google.com:1930211" }]
                     : [],
             });
+            console.log("peerConnection", peerConnection);
 
             const dataChannel = peerConnection.createDataChannel("text", {
                 negotiated: true,
@@ -101,7 +105,12 @@ export const useServerlessWebRTC = <
             setDataChannel(dataChannel);
 
             peerConnection.onnegotiationneeded = async () => {
-                await peerConnection.setLocalDescription();
+                await peerConnection.setLocalDescription(undefined).then(() => {
+                    console.log(
+                        "onnegotiationneeded",
+                        peerConnection.localDescription
+                    );
+                });
             };
 
             peerConnection.onicegatheringstatechange = () => {
@@ -180,7 +189,10 @@ export const useServerlessWebRTC = <
         };
     }, [dataChannel, messageHandlers]);
 
-    const setRemoteDescription = async (remoteDescriptionString: string) => {
+    const setHardCodedDescriptions = async (
+        localDescriptionString: string,
+        remoteDescriptionString: string
+    ) => {
         setRemoteDescriptionString(remoteDescriptionString);
 
         if (!peerConnection)
@@ -188,20 +200,35 @@ export const useServerlessWebRTC = <
                 "Tried to set remote description before Peer Connection was created."
             );
 
+        const localDescription = JSON.parse(
+            localDescriptionString
+        ) as RTCSessionDescription;
+
         const remoteDescription = JSON.parse(
             remoteDescriptionString
         ) as RTCSessionDescription;
 
-        await peerConnection.setRemoteDescription(remoteDescription);
-        setHasRemoteDescription(true);
-
-        if (remoteDescription.type === "offer") {
-            setLocalDescription(undefined);
-            await peerConnection.setLocalDescription();
-            setLocalDescription(peerConnection.localDescription || undefined);
+        if (remoteDescription.type !== "offer") {
+            peerConnection.setLocalDescription(localDescription).then(() => {
+                peerConnection.setRemoteDescription(remoteDescription);
+            });
         }
+        if (remoteDescription.type === "offer") {
+            peerConnection.setRemoteDescription(remoteDescription).then(() => {
+                peerConnection
+                    .setLocalDescription(undefined)
+                    .then(() => {
+                        peerConnection.setLocalDescription(localDescription);
+                    })
+                    .then(() => {
+                        setLocalDescription(
+                            peerConnection.localDescription || undefined
+                        );
+                    });
+            });
+        }       
     };
- 
+
     const sendMessage = <T extends Message["type"]>(
         messageType: T,
         data: FindByType<Message, T>["data"]
@@ -242,7 +269,7 @@ export const useServerlessWebRTC = <
         localDescription: JSON.stringify(localDescription),
         isLocalDescriptionReady: !isIceGatheringComplete,
         remoteDescriptionString,
-        setRemoteDescription,
+        setHardCodedDescriptions,
         sendMessage,
         registerEventHandler,
         connectionState: calculateConnectionState(
