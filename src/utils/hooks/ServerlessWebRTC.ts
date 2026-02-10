@@ -101,7 +101,7 @@ export const useServerlessWebRTC = <
             setDataChannel(dataChannel);
 
             peerConnection.onnegotiationneeded = async () => {
-                await peerConnection.setLocalDescription();
+                await peerConnection.createOffer().then((offer) => peerConnection.setLocalDescription(offer));
             };
 
             peerConnection.onicegatheringstatechange = () => {

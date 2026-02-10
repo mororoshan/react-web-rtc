@@ -9,22 +9,24 @@ export const RemoteDescriptionInput = ({
 }: {
     setRemoteDescription: ServerlessWebRTC["setRemoteDescription"];
 }) => {
-    const { register, getValues } = useForm<{ remoteDescription: string }>({
-        mode: "onChange",
-    });
+    const handleConnect = async () => {
+        console.log(window.isSecureContext, navigator);
+        if (window.isSecureContext && navigator.clipboard) {
+            await navigator.clipboard
+                .readText()
+                .then((clipText) => {
+                    console.log(clipText);
+                    setRemoteDescription(clipText);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+    };
 
     return (
         <div>
-            <Input {...register("remoteDescription")} />
-            <Button
-                onClick={() => {
-                    if (!getValues("remoteDescription")) return;
-
-                    setRemoteDescription(getValues("remoteDescription"));
-                }}
-            >
-                Connect
-            </Button>
+            <Button className="w-full" onClick={async () => handleConnect()}>Connect</Button>
         </div>
     );
 };

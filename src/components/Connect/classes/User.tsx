@@ -1,3 +1,4 @@
+import { action, makeAutoObservable } from "mobx";
 import {
     Messages,
     TMassageTypes,
@@ -12,10 +13,12 @@ export class User {
     public sendMessage?: TSendCallback | null;
 
     public setRemoteDescription?: (
-        remoteDescriptionString: string
+        remoteDescriptionString: string,
     ) => Promise<void>;
 
     constructor(name: string) {
+        makeAutoObservable(this);
+
         this.name = name;
         this.localRTCSession = "";
         this.randomKey = Math.random();
@@ -26,7 +29,7 @@ export class User {
     }
 
     setRemoteDescriptionFn(
-        fn: (remoteDescriptionString: string) => Promise<void>
+        fn: (remoteDescriptionString: string) => Promise<void>,
     ) {
         this.setRemoteDescription = fn;
     }
@@ -35,9 +38,9 @@ export class User {
         this.sendMessage = fn;
     }
 
-    setName(name: string) {
+    setName = action((name: string) => {
         this.name = name;
-    }
+    });
 
     handleSendMassage(massage: TMassageTypes, data: Messages["data"]) {
         if (!this.sendMessage) return;

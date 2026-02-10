@@ -6,11 +6,7 @@ export const WaitForRemoteDescriptionWidget = ({
 }: {
   setRemoteDescription: ServerlessWebRTC["setRemoteDescription"];
 }) => (
-  <div>
-    <p>
-      Now get your friend to send you their local description. Paste it into the
-      connect box and press connect.
-    </p>
+  <div>   
     <RemoteDescriptionInput setRemoteDescription={setRemoteDescription} />
   </div>
 );

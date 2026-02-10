@@ -1,12 +1,11 @@
-import ConnectionPage from "./pages/ConnectionPage";
-import HardCodedPage from './pages/HardCodedPage';
+import { BrowserRouter } from "react-router-dom";
+import MainRoutes from "./routes/routes";
 
 const App = () => {
     return (
-        <div className="app w-full h-full">
-            <ConnectionPage />
-            {/* <HardCodedPage /> */}
-        </div>
+        <BrowserRouter>
+            <MainRoutes />
+        </BrowserRouter>
     );
 };
 

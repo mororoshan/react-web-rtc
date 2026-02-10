@@ -8,7 +8,6 @@ export const SendLocalDescriptionWidget = ({
     localDescription: string | undefined;
 }) => (
     <div>
-        <p>Now copy your local description and send it to your friend.</p>
         <CopyLocalDescription
             isLoading={isLoading}
             localDescription={localDescription}

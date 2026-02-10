@@ -1,5 +1,5 @@
 import { useServerlessWebRTC } from "../../../utils/hooks/ServerlessWebRTC";
-import { ConnectedWidget, DisconnectedWidget, InitialWidget, SendLocalDescriptionWidget, WaitForRemoteDescriptionWidget } from "./components";
+import { InitialWidget, SendLocalDescriptionWidget, WaitForRemoteDescriptionWidget } from "./components";
 import { ConnectionState } from "./models/types/ConnectionState";
 
 
@@ -41,13 +41,6 @@ export const ConnectionWidget = ({
       />
     );
   }
-  if (connectionState === "connected") {
-    return <ConnectedWidget />;
-  }
-
-  if (connectionState === "disconnected") {
-    return <DisconnectedWidget />;
-  }
-
-  return <DisconnectedWidget />;
+  
+  return <></>;
 };

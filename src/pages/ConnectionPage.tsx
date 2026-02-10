@@ -1,13 +1,21 @@
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import Connect from "../components/Connect/Connect";
 import { observer } from "mobx-react-lite";
-import store from "../utils/stores/WebRTS.store";
 import { User } from "../components/Connect/classes/User";
 import Button from "../components/ui/Button/Button";
+import Chat from "../components/Chat/Chat";
+import { useWebRTCStore } from "../components/Connect/stores/webrtc.store";
 
 type Props = {};
 
-const ConnectionPage = observer((props: Props) => {   
+const ConnectionPage = observer((props: Props) => {
+    const store = useWebRTCStore();
+
+    useEffect(() => {
+        if (!store.name) {
+            store.fetchRandomName();
+        }
+    }, []);
 
     if (!store.name) {
         return <div>Loading</div>;
@@ -22,10 +30,10 @@ const ConnectionPage = observer((props: Props) => {
     };
 
     return (
-        <>
+        <div className="bg-gray-700 p-6 mx-4">
             <h1>MY NAME IS {store.name}</h1>
-            <section className="flex flex-wrap gap-16">
-                {store.users.map((user) => (
+            <section className="flex flex-wrap gap-8">
+                {store.usersArray.map((user) => (
                     <Fragment key={user.randomKey}>
                         <Connect
                             testKey={0}
@@ -35,22 +43,21 @@ const ConnectionPage = observer((props: Props) => {
                         />
                     </Fragment>
                 ))}
+                <div className="flex justify-center items-center">
+                    <Button
+                        className="w-12 h-12"
+                        onClick={() => handleAddUser()}
+                    >
+                        +
+                    </Button>
+                </div>
             </section>
-            <Button onClick={() => handleAddUser()}>+</Button>
-            {store.users.length > 0 && (
-                <Button
-                    onClick={() => {
-                        console.log(store.usersArray);
-                        store.sendMassageToAll("text-message", {
-                            from: "nice cock",
-                            value: "awesome balls",
-                        });
-                    }}
-                >
-                    Send Json Data
-                </Button>
-            )}
-        </>
+            <div className="flex justify-center w-full">
+                <div className="w-1/3">
+                    <Chat />
+                </div>
+            </div>
+        </div>
     );
 });
 

@@ -32,6 +32,7 @@ const CopyLocalDescription = ({
     return (
         <div>
             <Button
+                className="w-full"
                 disabled={isLoading}
                 onClick={() => {
                     !isLoading &&
