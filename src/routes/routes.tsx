@@ -8,9 +8,9 @@ import ConnectionPage from "../pages/ConnectionPage";
 const MainRoutes = () => (
     <Routes>
         <Route path="" element={<MainLayout />}>
-            <Route path={routes.home} element={<MainPage />} />
-            <Route path={routes.simpleConnect} element={<ConnectionPage />} />
-            <Route path={routes.glass} element={<LiquidGlassPage />} />
+            <Route path={routes.HOME} element={<MainPage />} />
+            <Route path={routes.SIMPLE_CONNECT} element={<ConnectionPage />} />
+            <Route path={routes.LIQUID_GLASS} element={<LiquidGlassPage />} />
         </Route>
     </Routes>
 );
