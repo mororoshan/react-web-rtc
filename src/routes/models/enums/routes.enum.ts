@@ -1,5 +1,5 @@
 export enum routes {
-    home = "/",
-    simpleConnect = "/simple-connect",
-    glass = "/glass",
+    HOME = "/",
+    SIMPLE_CONNECT = "/simple-connect",
+    LIQUID_GLASS = "/glass",
 }

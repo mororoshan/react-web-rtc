@@ -1,5 +1,4 @@
-import { GlassElement } from "../components/GlassElement";
-import Button from "../shared/ui/Button/Button";
+import ButtonGlass from "../shared/ui/ButtonGlass/ButtonGlass";
 import useDraggable from "../shared/lib/hooks/useDraggable";
 
 type Props = {};
@@ -18,20 +17,17 @@ const LiquidGlassPage = (props: Props) => {
                     className="w-fit"
                     draggable
                 >
-                    <GlassElement
+                    <ButtonGlass
                         width={100}
                         height={100}
                         radius={0}
-                        depth={20}
-                        blur={0.2}
+                        depth={80}
+                        blur={0}
                         chromaticAberration={2}
-                        strength={40}
-                        className="flex items-center justify-center bg-slate-200 bg-opacity-30"
+                        strength={10}
                     >
-                        <Button className="bg-transparent border-none hover:bg-inherit hover:text-inherit">
-                            Button
-                        </Button>
-                    </GlassElement>
+                        Button
+                    </ButtonGlass>
                 </div>
             </section>
         </div>
