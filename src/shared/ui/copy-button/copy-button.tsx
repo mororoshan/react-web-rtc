@@ -44,3 +44,4 @@ const CopyButton = ({ text, children }: Props) => {
 };
 
 export default CopyButton;
+
