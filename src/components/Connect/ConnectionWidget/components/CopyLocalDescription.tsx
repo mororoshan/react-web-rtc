@@ -1,4 +1,4 @@
-import Button from "../../../ui/Button/Button";
+import Button from "../../../../shared/ui/Button/Button";
 
 const CopyLocalDescription = ({
     isLoading,

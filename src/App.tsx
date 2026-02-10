@@ -1,12 +1,7 @@
-import { BrowserRouter } from "react-router-dom";
-import MainRoutes from "./routes/routes";
+import { AppRouter } from "./app/providers/router";
 
 const App = () => {
-    return (
-        <BrowserRouter>
-            <MainRoutes />
-        </BrowserRouter>
-    );
+    return <AppRouter />;
 };
 
 export default App;
