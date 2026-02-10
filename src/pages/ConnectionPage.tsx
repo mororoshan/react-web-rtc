@@ -2,7 +2,7 @@ import { Fragment, useEffect } from "react";
 import Connect from "../components/Connect/Connect";
 import { observer } from "mobx-react-lite";
 import { User } from "../components/Connect/classes/User";
-import Button from "../components/ui/Button/Button";
+import Button from "../shared/ui/Button/Button";
 import Chat from "../components/Chat/Chat";
 import { useWebRTCStore } from "../components/Connect/stores/webrtc.store";
 

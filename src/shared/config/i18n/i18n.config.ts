@@ -34,3 +34,4 @@ i18n.init({
 });
 
 export default i18n;
+

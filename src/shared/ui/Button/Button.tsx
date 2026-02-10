@@ -6,7 +6,7 @@ import React, {
 
 interface ButtonProps extends InputHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
-    type?: 'submit' | 'reset' | 'button';
+    type?: "submit" | "reset" | "button";
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -32,7 +32,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 {children}
             </button>
         );
-    }
+    },
 );
 
 export default Button;
+

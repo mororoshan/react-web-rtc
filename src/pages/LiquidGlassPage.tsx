@@ -1,6 +1,6 @@
 import { GlassElement } from "../components/GlassElement";
-import Button from "../components/ui/Button/Button";
-import useDraggable from "../utils/hooks/useDraggable";
+import Button from "../shared/ui/Button/Button";
+import useDraggable from "../shared/lib/hooks/useDraggable";
 
 type Props = {};
 

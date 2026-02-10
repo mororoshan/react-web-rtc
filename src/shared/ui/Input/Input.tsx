@@ -6,7 +6,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
     ({ className = "", inputClassName = "", disabled, ...rest }, ref) => {
-
         return (
             <input
                 {...rest}
@@ -15,7 +14,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 ref={ref}
             />
         );
-    }
+    },
 );
 
 export default Input;
+

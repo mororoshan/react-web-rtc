@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import Input from "../ui/Input/Input";
-import Button from "../ui/Button/Button";
+import Input from "../../shared/ui/Input/Input";
+import Button from "../../shared/ui/Button/Button";
 import { useForm } from "react-hook-form";
 import { useWebRTCStore } from "../Connect/stores/webrtc.store";
 
