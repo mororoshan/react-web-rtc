@@ -1,7 +1,4 @@
-import { useRef, useState } from "react";
 import { ServerlessWebRTC } from "../ConnectionWidget";
-import { useForm } from "react-hook-form";
-import Input from "../../../../shared/ui/Input/Input";
 import Button from "../../../../shared/ui/Button/Button";
 
 export const RemoteDescriptionInput = ({

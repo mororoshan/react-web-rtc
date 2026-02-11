@@ -1,7 +1,6 @@
 import React from "react";
 import { navRoutes } from "./models/consts/navRoutes";
 import Button from "../../shared/ui/Button/Button";
-import { routes } from "../../routes/models/enums/routes.enum";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {

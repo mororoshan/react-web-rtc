@@ -1,5 +1,20 @@
 import { BaseMessage, FindByType } from "../../../utils/hooks/ServerlessWebRTC";
 
+export enum MessageType {
+    TEXT_MESSAGE = "text-message",
+    PING = "ping",
+    SEND_JSON_DATA = "send-json-data",
+    ADD_USER = "add-user",
+    CONNECTED_USERS = "connected-users",
+    CREATE_NEW_CONNECTION = "create-new-connection",
+    SENDING_ANSWER_OFFER = "sending-answer-offer",
+    SENDING_OFFERS = "sending-offers",
+    SENDING_ANSWERS = "sending-answers",
+    ASK_FOR_USERS = "ask-for-users",
+    SENDING_OFFER_FROM_NEW = "sending-offer-from-new",
+    RECEIVE_ANSWER_OFFER = "receive-answer-offer",
+}
+
 export type TSendCallback = <T extends TMassageTypes>(
     messageType: T,
     data: Messages["data"],
@@ -20,32 +35,32 @@ export type Messages =
     | SendReceiveAnswerOfferMessage;
 
 export type TMassageTypes =
-    | "text-message"
-    | "ping"
-    | "send-json-data"
-    | "add-user"
-    | "connected-users"
-    | "create-new-connection"
-    | "sending-answer-offer"
-    | "sending-offers"
-    | "sending-answers"
-    | "ask-for-users"
-    | "sending-offer-from-new"
-    | "receive-answer-offer";
+    | MessageType.TEXT_MESSAGE
+    | MessageType.PING
+    | MessageType.SEND_JSON_DATA
+    | MessageType.ADD_USER
+    | MessageType.CONNECTED_USERS
+    | MessageType.CREATE_NEW_CONNECTION
+    | MessageType.SENDING_ANSWER_OFFER
+    | MessageType.SENDING_OFFERS
+    | MessageType.SENDING_ANSWERS
+    | MessageType.ASK_FOR_USERS
+    | MessageType.SENDING_OFFER_FROM_NEW
+    | MessageType.RECEIVE_ANSWER_OFFER;
 
 export type TextMessage = BaseMessage<
-    "text-message",
+    MessageType.TEXT_MESSAGE,
     { value: string; from: string }
 >;
-export type PingMessage = BaseMessage<"ping">;
+export type PingMessage = BaseMessage<MessageType.PING>;
 
 export type JSONDataMassage = BaseMessage<
-    "send-json-data",
+    MessageType.SEND_JSON_DATA,
     { data: string; from: string }
 >;
 
 export type AddUserMessage = BaseMessage<
-    "add-user",
+    MessageType.ADD_USER,
     { name: string; usersInNet: number }
 >;
 export type RemoveUserMessage = BaseMessage<"remove-user", { name: string }>;
@@ -54,10 +69,10 @@ export type SendReplyOfferMessage = BaseMessage<
     { name: string }
 >;
 
-export type AskForUsersMessage = BaseMessage<"ask-for-users", undefined>;
+export type AskForUsersMessage = BaseMessage<MessageType.ASK_FOR_USERS, undefined>;
 
 export type ConnectedUsersMessage = BaseMessage<
-    "connected-users",
+    MessageType.CONNECTED_USERS,
     { userId: string[] }
 >;
 
@@ -67,27 +82,27 @@ export type CreateNewConnectionMessage = BaseMessage<
 >;
 
 export type SendingAnswerOfferMessage = BaseMessage<
-    "sending-answer-offer",
+    MessageType.SENDING_ANSWER_OFFER,
     { to: string; userId: string; offer: string }
 >;
 
 export type SendingOffersMessage = BaseMessage<
-    "sending-offers",
+    MessageType.SENDING_OFFERS,
     { userId: string; offer: string | undefined }[]
 >;
 
 export type SendingAnswersMessage = BaseMessage<
-    "sending-answers",
+    MessageType.SENDING_ANSWERS,
     { data: { userId: string; answer: string | undefined }[] }
 >;
 
 export type SendNewPersonOfferPersonMessage = BaseMessage<
-    "sending-offer-from-new",
+    MessageType.SENDING_OFFER_FROM_NEW,
     { userId: string; offer: string }
 >;
 
 export type SendReceiveAnswerOfferMessage = BaseMessage<
-    "receive-answer-offer",
+    MessageType.RECEIVE_ANSWER_OFFER,
     {
         userId: string;
         answer: string;
