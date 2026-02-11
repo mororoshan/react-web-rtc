@@ -25,10 +25,8 @@ export const useConnect = ({
     const handleSendOfferRef = useRef<() => void>();
     const handleReceiveAnswerOfferFnRef =
         useRef<(user: User, from: string, offer: string) => void>();
-    const handledAnswerOfferFnRef =
-        useRef<(to: string, ld: string) => void>();
-    const handleNewPersonFnRef =
-        useRef<(user: User, offer: string) => void>();
+    const handledAnswerOfferFnRef = useRef<(to: string, ld: string) => void>();
+    const handleNewPersonFnRef = useRef<(user: User, offer: string) => void>();
 
     const {
         localDescription,
@@ -92,8 +90,8 @@ export const useConnect = ({
                 to,
                 userId: name,
                 offer:
-                    store.users.find((u) => u.name === to)
-                        ?.localRTCSession || "",
+                    store.users.find((u) => u.name === to)?.localRTCSession ||
+                    "",
             });
         }, 500);
     };
@@ -219,9 +217,7 @@ export const useConnect = ({
                 setTimeout(() => {
                     if (u && u.setRemoteDescription) {
                         u.remoteRTCSession = message.data.offer;
-                        u.setRemoteDescription(
-                            JSON.parse(message.data.offer),
-                        );
+                        u.setRemoteDescription(JSON.parse(message.data.offer));
                     }
                 }, 500);
 
@@ -239,9 +235,7 @@ export const useConnect = ({
         const unregisterSendAnswerOffer = registerEventHandler(
             "sending-answer-offer",
             (message) => {
-                const us = store.users.find(
-                    (u) => u.name === message.data.to,
-                );
+                const us = store.users.find((u) => u.name === message.data.to);
                 setTimeout(() => {
                     if (
                         us &&
@@ -292,4 +286,3 @@ export const useConnect = ({
         setRemoteDescription,
     };
 };
-

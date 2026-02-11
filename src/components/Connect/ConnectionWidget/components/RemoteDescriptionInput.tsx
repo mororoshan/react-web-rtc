@@ -26,7 +26,9 @@ export const RemoteDescriptionInput = ({
 
     return (
         <div>
-            <Button className="w-full" onClick={async () => handleConnect()}>Connect</Button>
+            <Button className="w-full" onClick={async () => handleConnect()}>
+                Connect
+            </Button>
         </div>
     );
 };

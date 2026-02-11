@@ -1,13 +1,13 @@
 import { DisplacementOptions } from "./getGlassElementFilter";
 
 export const getDisplacementMap = ({
-  height,
-  width,
-  radius,
-  depth,
+    height,
+    width,
+    radius,
+    depth,
 }: Omit<DisplacementOptions, "chromaticAberration" | "strength">) =>
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(`<svg height="${height}" width="${width}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(`<svg height="${height}" width="${width}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
     <style>
         .mix { mix-blend-mode: screen; }
     </style>
@@ -63,4 +63,3 @@ export const getDisplacementMap = ({
       />
     </g>
 </svg>`);
-

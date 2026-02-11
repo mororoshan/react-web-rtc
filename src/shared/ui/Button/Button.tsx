@@ -1,8 +1,4 @@
-import React, {
-    InputHTMLAttributes,
-    ReactNode,
-    forwardRef,
-} from "react";
+import React, { InputHTMLAttributes, ReactNode, forwardRef } from "react";
 
 interface ButtonProps extends InputHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
@@ -36,4 +32,3 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 export default Button;
-

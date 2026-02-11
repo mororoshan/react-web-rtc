@@ -55,4 +55,3 @@ export function createContext<T>(options: CreateContextOptions<T> = {}) {
         createdContext,
     ] as TCreateContextReturn<T>;
 }
-
