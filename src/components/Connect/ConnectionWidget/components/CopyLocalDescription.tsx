@@ -20,7 +20,7 @@ const CopyLocalDescription = ({
         }
         document.body.removeChild(textArea);
     };
-    
+
     const copyToClipboard = (content: string) => {
         if (window.isSecureContext && navigator.clipboard) {
             navigator.clipboard.writeText(content);

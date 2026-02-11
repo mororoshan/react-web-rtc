@@ -28,7 +28,7 @@ const defaultConfig: UseServerlessWebRTCConfig = {
 
 function calculateConnectionState(
     rtcConnectionState: RTCPeerConnectionState,
-    hasRemoteDescription: boolean
+    hasRemoteDescription: boolean,
 ): ConnectionState {
     if (rtcConnectionState === "new") {
         return "initial";
@@ -59,9 +59,9 @@ function calculateConnectionState(
 
 export const useServerlessWebRTC = <
     MessageTypes extends string,
-    Message extends BaseMessage<MessageTypes, any>
+    Message extends BaseMessage<MessageTypes, any>,
 >(
-    config?: Partial<UseServerlessWebRTCConfig>
+    config?: Partial<UseServerlessWebRTCConfig>,
 ) => {
     const { useIceServer } = { ...defaultConfig, ...config };
 
@@ -101,7 +101,9 @@ export const useServerlessWebRTC = <
             setDataChannel(dataChannel);
 
             peerConnection.onnegotiationneeded = async () => {
-                await peerConnection.createOffer().then((offer) => peerConnection.setLocalDescription(offer));
+                await peerConnection
+                    .createOffer()
+                    .then((offer) => peerConnection.setLocalDescription(offer));
             };
 
             peerConnection.onicegatheringstatechange = () => {
@@ -114,7 +116,7 @@ export const useServerlessWebRTC = <
                 } else if (iceGatheringState === "complete") {
                     setIsIceGatheringComplete(true);
                     setLocalDescription(
-                        peerConnection.localDescription || undefined
+                        peerConnection.localDescription || undefined,
                     );
                 }
             };
@@ -171,7 +173,7 @@ export const useServerlessWebRTC = <
             if (!messageHandler) {
                 console.warn(
                     "No handler registered for message with type:",
-                    message.type
+                    message.type,
                 );
                 return;
             }
@@ -185,11 +187,11 @@ export const useServerlessWebRTC = <
 
         if (!peerConnection)
             throw new Error(
-                "Tried to set remote description before Peer Connection was created."
+                "Tried to set remote description before Peer Connection was created.",
             );
 
         const remoteDescription = JSON.parse(
-            remoteDescriptionString
+            remoteDescriptionString,
         ) as RTCSessionDescription;
 
         await peerConnection.setRemoteDescription(remoteDescription);
@@ -201,10 +203,10 @@ export const useServerlessWebRTC = <
             setLocalDescription(peerConnection.localDescription || undefined);
         }
     };
- 
+
     const sendMessage = <T extends Message["type"]>(
         messageType: T,
-        data: FindByType<Message, T>["data"]
+        data: FindByType<Message, T>["data"],
     ) => {
         if (!dataChannel) return;
 
@@ -219,7 +221,7 @@ export const useServerlessWebRTC = <
     const registerEventHandler = useCallback(
         <T extends Message["type"]>(
             messageType: T,
-            handler: (message: FindByType<Message, T>) => void
+            handler: (message: FindByType<Message, T>) => void,
         ) => {
             setMessageHandlers((prev) => ({
                 ...prev,
@@ -235,7 +237,7 @@ export const useServerlessWebRTC = <
                 });
             };
         },
-        []
+        [],
     );
 
     return {
@@ -247,7 +249,7 @@ export const useServerlessWebRTC = <
         registerEventHandler,
         connectionState: calculateConnectionState(
             rtcConnectionState,
-            hasRemoteDescription
+            hasRemoteDescription,
         ),
     };
 };

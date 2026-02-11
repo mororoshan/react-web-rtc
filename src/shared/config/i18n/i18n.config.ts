@@ -1,4 +1,5 @@
-import i18n from "i18next";
+import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
 
 export enum Languages {
     RU = "ru",
@@ -6,10 +7,9 @@ export enum Languages {
 }
 
 const supportedLanguages = Object.values(Languages);
-
 const savedLanguage = sessionStorage.getItem("i18nextLng") || Languages.RU;
 
-i18n.init({
+i18next.use(initReactI18next).init({
     fallbackLng: "ru",
     lng: savedLanguage,
     debug: false,
@@ -19,19 +19,6 @@ i18n.init({
         escapeValue: false,
     },
     returnEmptyString: false,
-    resources: {
-        en: {
-            translation: {
-                hello: "Hello",
-            },
-        },
-        ru: {
-            translation: {
-                hello: "Привет",
-            },
-        },
-    },
 });
 
-export default i18n;
-
+export default i18next;

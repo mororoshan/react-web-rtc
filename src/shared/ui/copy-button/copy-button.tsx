@@ -34,9 +34,7 @@ const CopyButton = ({ text, children }: Props) => {
 
     return (
         <button
-            onClick={() =>
-                copyToClipboard(text + "\n" || "there`s no text")
-            }
+            onClick={() => copyToClipboard(text + "\n" || "there`s no text")}
         >
             {children}
         </button>
@@ -44,4 +42,3 @@ const CopyButton = ({ text, children }: Props) => {
 };
 
 export default CopyButton;
-

@@ -2,13 +2,13 @@ import { RemoteDescriptionInput } from "./RemoteDescriptionInput";
 import { ServerlessWebRTC } from "../ConnectionWidget";
 
 export const WaitForRemoteDescriptionWidget = ({
-  setRemoteDescription,
+    setRemoteDescription,
 }: {
-  setRemoteDescription: ServerlessWebRTC["setRemoteDescription"];
+    setRemoteDescription: ServerlessWebRTC["setRemoteDescription"];
 }) => (
-  <div>   
-    <RemoteDescriptionInput setRemoteDescription={setRemoteDescription} />
-  </div>
+    <div>
+        <RemoteDescriptionInput setRemoteDescription={setRemoteDescription} />
+    </div>
 );
 
 export default WaitForRemoteDescriptionWidget;

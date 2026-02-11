@@ -2,7 +2,7 @@ import { BaseMessage, FindByType } from "../../../utils/hooks/ServerlessWebRTC";
 
 export type TSendCallback = <T extends TMassageTypes>(
     messageType: T,
-    data: Messages["data"]
+    data: Messages["data"],
 ) => void;
 
 export type Messages =
@@ -68,7 +68,7 @@ export type CreateNewConnectionMessage = BaseMessage<
 
 export type SendingAnswerOfferMessage = BaseMessage<
     "sending-answer-offer",
-    { to: string, userId: string; offer: string }
+    { to: string; userId: string; offer: string }
 >;
 
 export type SendingOffersMessage = BaseMessage<
@@ -86,7 +86,10 @@ export type SendNewPersonOfferPersonMessage = BaseMessage<
     { userId: string; offer: string }
 >;
 
-export type SendReceiveAnswerOfferMessage = BaseMessage<"receive-answer-offer", {
-    userId: string;
-    answer: string;
-}>;
+export type SendReceiveAnswerOfferMessage = BaseMessage<
+    "receive-answer-offer",
+    {
+        userId: string;
+        answer: string;
+    }
+>;
