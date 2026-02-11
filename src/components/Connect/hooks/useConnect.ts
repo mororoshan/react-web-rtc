@@ -3,6 +3,7 @@ import { useServerlessWebRTC } from "../../../utils/hooks/ServerlessWebRTC";
 import {
     Messages,
     TSendCallback,
+    MessageType,
 } from "../../../contexts/models/types/TSendCallback";
 import { User } from "../classes/User";
 import { useWebRTCStore } from "../stores/webrtc.store";
@@ -35,13 +36,12 @@ export const useConnect = ({
         registerEventHandler,
         connectionState,
         isLocalDescriptionReady,
-        remoteDescriptionString,
     } = useServerlessWebRTC<Messages["type"], Messages>({
         useIceServer: !isPeerOnSameNetwork,
     });
 
     const askForUsersInNet = async () => {
-        sendMessage("ask-for-users", undefined);
+        sendMessage(MessageType.ASK_FOR_USERS, undefined);
     };
 
     const handleCheckForUsers = async () => {
@@ -49,7 +49,7 @@ export const useConnect = ({
         if (!thisUser || !thisUser.sendMessage) {
             return;
         }
-        thisUser.sendMessage("connected-users", {
+        thisUser.sendMessage(MessageType.CONNECTED_USERS, {
             userId: store.users
                 .map((user) => user.name)
                 .filter((e) => e !== ""),
@@ -69,7 +69,7 @@ export const useConnect = ({
 
     const handleSendOfferToUser = (u: User, offer: string) => {
         if (u.sendMessage) {
-            u.sendMessage("sending-offer-from-new", {
+            u.sendMessage(MessageType.SENDING_OFFER_FROM_NEW, {
                 userId: user.name,
                 offer: offer,
             });
@@ -80,13 +80,13 @@ export const useConnect = ({
         let usersFromStore: ReturnType<typeof getUsersFromStore>;
         setTimeout(() => {
             usersFromStore = getUsersFromStore();
-            sendMessage("sending-offers", usersFromStore);
+            sendMessage(MessageType.SENDING_OFFERS, usersFromStore);
         }, 500);
     };
 
     const sendAnswerOffer = async (to: string, ld: string) => {
         setTimeout(() => {
-            sendMessage("sending-answer-offer", {
+            sendMessage(MessageType.SENDING_ANSWER_OFFER, {
                 to,
                 userId: name,
                 offer:
@@ -102,7 +102,10 @@ export const useConnect = ({
         answer: string,
     ) => {
         if (u.sendMessage) {
-            u.sendMessage("receive-answer-offer", { userId: from, answer });
+            u.sendMessage(MessageType.RECEIVE_ANSWER_OFFER, {
+                userId: from,
+                answer,
+            });
         }
     };
 
@@ -112,7 +115,7 @@ export const useConnect = ({
     handleReceiveAnswerOfferFnRef.current = handleReceiveAnswerOffer;
 
     const handleAddUser = async () => {
-        sendMessage("add-user", {
+        sendMessage(MessageType.ADD_USER, {
             name,
             usersInNet: store.users.filter((user) => user.name !== "").length,
         });
@@ -146,7 +149,7 @@ export const useConnect = ({
 
     useEffect(() => {
         const unregisterSendInfoAboutOtherUsers = registerEventHandler(
-            "connected-users",
+            MessageType.CONNECTED_USERS,
             (message) => {
                 handleAddUsers(message.data.userId.filter((e) => e !== name));
                 isConnected.current = true;
@@ -155,7 +158,7 @@ export const useConnect = ({
         );
 
         const unregisterTextMessage = registerEventHandler(
-            "text-message",
+            MessageType.TEXT_MESSAGE,
             (message) => {
                 store.addChatMessage(
                     false,
@@ -165,19 +168,21 @@ export const useConnect = ({
             },
         );
 
-        const unregisterPingMessage = registerEventHandler("ping", () => {
+        const unregisterPingMessage = registerEventHandler(
+            MessageType.PING,
+            () => {
             console.log("Received ping-message.");
         });
 
         const unregisterSendJsonData = registerEventHandler(
-            "send-json-data",
+            MessageType.SEND_JSON_DATA,
             (message) => {
                 console.log("Received send-json-data:", message.data);
             },
         );
 
         const unregisterAddUser = registerEventHandler(
-            "add-user",
+            MessageType.ADD_USER,
             (message) => {
                 if (user) {
                     user.setName(message.data.name);
@@ -187,14 +192,14 @@ export const useConnect = ({
         );
 
         const unregisterAskForUsers = registerEventHandler(
-            "ask-for-users",
+            MessageType.ASK_FOR_USERS,
             () => {
                 handleCheckForUsers();
             },
         );
 
         const unregisterSendingOffers = registerEventHandler(
-            "sending-offers",
+            MessageType.SENDING_OFFERS,
             (message) => {
                 message.data.forEach((offer) => {
                     const u = store.users.find(
@@ -207,7 +212,7 @@ export const useConnect = ({
         );
 
         const unregisterSendOfferFromNew = registerEventHandler(
-            "sending-offer-from-new",
+            MessageType.SENDING_OFFER_FROM_NEW,
             (message) => {
                 handleAddUsers([message.data.userId]);
                 const u = store.users.find(
@@ -233,7 +238,7 @@ export const useConnect = ({
         );
 
         const unregisterSendAnswerOffer = registerEventHandler(
-            "sending-answer-offer",
+            MessageType.SENDING_ANSWER_OFFER,
             (message) => {
                 const us = store.users.find((u) => u.name === message.data.to);
                 setTimeout(() => {
@@ -253,7 +258,7 @@ export const useConnect = ({
         );
 
         const unregisterAskForUsersInNet = registerEventHandler(
-            "receive-answer-offer",
+            MessageType.RECEIVE_ANSWER_OFFER,
             (message) => {
                 const us = store.users.find(
                     (u) => u.name === message.data.userId,

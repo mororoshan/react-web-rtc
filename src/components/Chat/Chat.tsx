@@ -4,16 +4,18 @@ import Input from "../../shared/ui/Input/Input";
 import Button from "../../shared/ui/Button/Button";
 import { useForm } from "react-hook-form";
 import { useWebRTCStore } from "../Connect/stores/webrtc.store";
+import { MessageType } from "../../contexts/models/types/TSendCallback";
 
 type Props = {};
 
 const Chat = observer((props: Props) => {
     const store = useWebRTCStore();
 
-    const { register, handleSubmit, watch, getValues, setFocus, resetField } =
-        useForm<{ chatMessage: string }>({
-            mode: "onChange",
-        });
+    const { register, getValues, resetField } = useForm<{
+        chatMessage: string;
+    }>({
+        mode: "onChange",
+    });
 
     return (
         <div className="w-full flex flex-col justify-center items-center">
@@ -46,7 +48,7 @@ const Chat = observer((props: Props) => {
                             from: store.name,
                         };
 
-                        store.sendMassageToAll("text-message", message);
+                        store.sendMassageToAll(MessageType.TEXT_MESSAGE, message);
                         store.addChatMessage(true, store.name, message.value);
 
                         resetField("chatMessage");
