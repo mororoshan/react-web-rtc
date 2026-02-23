@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import MainPage from "../pages/MainPage";
+import MainPage from "../pages/MainPage/MainPage";
 import MainLayout from "../layouts/MainLayout";
 import { routes } from "./models/enums/routes.enum";
 import LiquidGlassPage from "../pages/LiquidGlassPage";

@@ -10,12 +10,14 @@ type ButtonGlassProps = DisplacementOptions & {
     blur?: number;
     debug?: boolean;
     buttonProps?: ComponentProps<typeof Button>;
+    onClick?: () => void;
 };
 
 const ButtonGlass = ({
     children,
     className,
     buttonProps,
+    onClick,
     ...glassProps
 }: ButtonGlassProps): JSX.Element => {
     return (
@@ -27,6 +29,7 @@ const ButtonGlass = ({
         >
             <Button
                 {...buttonProps}
+                onClick={onClick}
                 className={`bg-transparent border-none hover:bg-inherit hover:text-inherit${
                     buttonProps?.className ? ` ${buttonProps.className}` : ""
                 }`}
