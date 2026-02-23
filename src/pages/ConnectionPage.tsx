@@ -34,14 +34,13 @@ const ConnectionPage = observer((props: Props) => {
             <h1>MY NAME IS {store.name}</h1>
             <section className="flex flex-wrap gap-8">
                 {store.usersArray.map((user) => (
-                    <Fragment key={user.randomKey}>
-                        <Connect
-                            testKey={0}
-                            name={store.name}
-                            user={user}
-                            handleAddUsers={handleAddUser}
-                        />
-                    </Fragment>
+                    <Connect
+                        key={user.randomKey}
+                        testKey={0}
+                        name={store.name}
+                        user={user}
+                        handleAddUsers={handleAddUser}
+                    />
                 ))}
                 <div className="flex justify-center items-center">
                     <Button

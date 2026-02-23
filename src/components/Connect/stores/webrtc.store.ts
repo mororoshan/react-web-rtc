@@ -22,7 +22,7 @@ class WebRTCStore {
                 "https://api.api-ninjas.com/v2/randomuser?count=1",
                 {
                     headers: {
-                        "X-Api-Key": process.env.REACT_APP_NAME_KEY,
+                        "X-Api-Key": import.meta.env.VITE_NAME_KEY,
                     },
                 },
             );
