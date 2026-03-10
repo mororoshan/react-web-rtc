@@ -1,5 +1,5 @@
 import React from "react";
-import { navRoutes } from "./models/consts/navRoutes";
+import { routesConfig } from "../../routes/config/routesConfig";
 import Button from "../../shared/ui/Button/Button";
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +8,7 @@ const Navbar = () => {
 
     return (
         <div className="flex items-center gap-1">
-            {navRoutes.map((route) => (
+            {routesConfig.map((route) => (
                 <Button key={route.path} onClick={() => navigate(route.path)}>
                     {route.name}
                 </Button>

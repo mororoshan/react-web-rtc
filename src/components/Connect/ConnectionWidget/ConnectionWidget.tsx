@@ -4,7 +4,7 @@ import {
     SendLocalDescriptionWidget,
     WaitForRemoteDescriptionWidget,
 } from "./components";
-import { ConnectionState } from "./models/types/ConnectionState";
+import type { ConnectionState } from "../../../utils/hooks/ServerlessWebRTC";
 
 export type ServerlessWebRTC = ReturnType<typeof useServerlessWebRTC>;
 

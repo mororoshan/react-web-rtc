@@ -15,7 +15,7 @@ export enum MessageType {
     RECEIVE_ANSWER_OFFER = "receive-answer-offer",
 }
 
-export type TSendCallback = <T extends TMassageTypes>(
+export type TSendCallback = <T extends TMessageTypes>(
     messageType: T,
     data: Messages["data"],
 ) => void;
@@ -23,7 +23,7 @@ export type TSendCallback = <T extends TMassageTypes>(
 export type Messages =
     | TextMessage
     | PingMessage
-    | JSONDataMassage
+    | JSONDataMessage
     | AddUserMessage
     | ConnectedUsersMessage
     | CreateNewConnectionMessage
@@ -34,7 +34,7 @@ export type Messages =
     | SendNewPersonOfferPersonMessage
     | SendReceiveAnswerOfferMessage;
 
-export type TMassageTypes =
+export type TMessageTypes =
     | MessageType.TEXT_MESSAGE
     | MessageType.PING
     | MessageType.SEND_JSON_DATA
@@ -54,7 +54,7 @@ export type TextMessage = BaseMessage<
 >;
 export type PingMessage = BaseMessage<MessageType.PING>;
 
-export type JSONDataMassage = BaseMessage<
+export type JSONDataMessage = BaseMessage<
     MessageType.SEND_JSON_DATA,
     { data: string; from: string }
 >;

@@ -48,7 +48,7 @@ const Chat = observer((props: Props) => {
                             from: store.name,
                         };
 
-                        store.sendMassageToAll(MessageType.TEXT_MESSAGE, message);
+                        store.sendMessageToAll(MessageType.TEXT_MESSAGE, message);
                         store.addChatMessage(true, store.name, message.value);
 
                         resetField("chatMessage");

@@ -1,16 +1,17 @@
 import { Route, Routes } from "react-router-dom";
-import MainPage from "../pages/MainPage/MainPage";
 import MainLayout from "../layouts/MainLayout";
-import { routes } from "./models/enums/routes.enum";
-import LiquidGlassPage from "../pages/LiquidGlassPage";
-import ConnectionPage from "../pages/ConnectionPage";
+import { routesConfig } from "./config/routesConfig";
 
 const MainRoutes = () => (
     <Routes>
         <Route path="" element={<MainLayout />}>
-            <Route path={routes.HOME} element={<MainPage />} />
-            <Route path={routes.SIMPLE_CONNECT} element={<ConnectionPage />} />
-            <Route path={routes.LIQUID_GLASS} element={<LiquidGlassPage />} />
+            {routesConfig.map(({ path, component: Component }) => (
+                <Route
+                    key={path}
+                    path={path === "/" ? "" : path.slice(1)}
+                    element={<Component />}
+                />
+            ))}
         </Route>
     </Routes>
 );

@@ -23,9 +23,7 @@ const ButtonGlass = ({
     return (
         <GlassElement
             {...glassProps}
-            className={`flex items-center justify-center bg-slate-200 bg-opacity-30${
-                className ? ` ${className}` : ""
-            }`}
+            className={className ? `flex items-center justify-center ${className}` : "flex items-center justify-center"}
         >
             <Button
                 {...buttonProps}

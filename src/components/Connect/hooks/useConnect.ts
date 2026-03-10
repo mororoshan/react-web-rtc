@@ -130,7 +130,7 @@ export const useConnect = ({
 
     useEffect(() => {
         if (connectionState && connectionState === "connected") {
-            user.setSendMassage(sendMessage as TSendCallback);
+            user.setSendMessage(sendMessage as TSendCallback);
             setTimeout(() => {
                 handleAddUser().then(() => {
                     if (store.users.length === 1) {

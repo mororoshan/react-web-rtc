@@ -1,10 +1,10 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import {
-    TMassageTypes,
+    TMessageTypes,
     Messages,
 } from "../../../contexts/models/types/TSendCallback";
 import { User } from "../classes/User";
-import { createContext, useContext } from "react";
+import { createContext, useContext, type ReactNode, createElement } from "react";
 import axios from "axios";
 
 class WebRTCStore {
@@ -39,9 +39,9 @@ class WebRTCStore {
         this.users = [...this.users, ...user];
     }
 
-    sendMassageToAll(type: TMassageTypes, massage: Messages["data"]) {
+    sendMessageToAll(type: TMessageTypes, message: Messages["data"]) {
         this.users.forEach((user) => {
-            user.handleSendMassage(type, massage);
+            user.handleSendMessage(type, message);
         });
     }
 
@@ -54,5 +54,26 @@ class WebRTCStore {
     });
 }
 
-const WebRTCStoreContext = createContext<WebRTCStore>(new WebRTCStore());
-export const useWebRTCStore = (): WebRTCStore => useContext(WebRTCStoreContext);
+const WebRTCStoreContext = createContext<WebRTCStore | null>(null);
+
+export const useWebRTCStore = (): WebRTCStore => {
+    const store = useContext(WebRTCStoreContext);
+    if (!store) {
+        throw new Error("useWebRTCStore must be used within WebRTCStoreProvider");
+    }
+    return store;
+};
+
+export function WebRTCStoreProvider({
+    children,
+    store = new WebRTCStore(),
+}: {
+    children: ReactNode;
+    store?: WebRTCStore;
+}) {
+    return createElement(
+        WebRTCStoreContext.Provider,
+        { value: store },
+        children,
+    );
+}

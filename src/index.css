@@ -51,12 +51,15 @@ code {
     background: #555;
 }
 
-.glass-panel {
-    backdrop-filter: url(#liquidGlassFilterId);
-}
-
 .bg-white-grid {
     background-size: 40px 40px;
     background-image: linear-gradient(to right, grey 1px, transparent 1px),
         linear-gradient(to bottom, grey 1px, transparent 1px);
+}
+
+.bg-dark-grid {
+    background-color: rgb(31 41 55); /* gray-800 */
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgb(75 85 99) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(75 85 99) 1px, transparent 1px);
 }

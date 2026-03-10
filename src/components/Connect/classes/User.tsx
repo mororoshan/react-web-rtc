@@ -1,7 +1,7 @@
 import { action, makeAutoObservable } from "mobx";
 import {
     Messages,
-    TMassageTypes,
+    TMessageTypes,
     TSendCallback,
 } from "../../../contexts/models/types/TSendCallback";
 
@@ -34,7 +34,7 @@ export class User {
         this.setRemoteDescription = fn;
     }
 
-    setSendMassage(fn: TSendCallback) {
+    setSendMessage(fn: TSendCallback) {
         this.sendMessage = fn;
     }
 
@@ -42,8 +42,8 @@ export class User {
         this.name = name;
     });
 
-    handleSendMassage(massage: TMassageTypes, data: Messages["data"]) {
+    handleSendMessage(messageType: TMessageTypes, data: Messages["data"]) {
         if (!this.sendMessage) return;
-        this.sendMessage(massage, data);
+        this.sendMessage(messageType, data);
     }
 }

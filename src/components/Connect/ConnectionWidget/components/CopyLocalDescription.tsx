@@ -1,4 +1,5 @@
 import Button from "../../../../shared/ui/Button/Button";
+import { copyToClipboard } from "../../../../shared/lib/copyToClipboard";
 
 const CopyLocalDescription = ({
     isLoading,
@@ -7,37 +8,15 @@ const CopyLocalDescription = ({
     isLoading: boolean;
     localDescription: string | undefined;
 }) => {
-    const unsecuredCopyToClipboard = (text: string) => {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-            document.execCommand("copy");
-        } catch (err) {
-            console.error("Unable to copy to clipboard", err);
-        }
-        document.body.removeChild(textArea);
-    };
-
-    const copyToClipboard = (content: string) => {
-        if (window.isSecureContext && navigator.clipboard) {
-            navigator.clipboard.writeText(content);
-        } else {
-            unsecuredCopyToClipboard(content);
-        }
-    };
-
     return (
         <div>
             <Button
                 className="w-full"
                 disabled={isLoading}
                 onClick={() => {
-                    !isLoading &&
-                        localDescription &&
-                        copyToClipboard(localDescription);
+                    if (!isLoading && localDescription) {
+                        void copyToClipboard(localDescription);
+                    }
                 }}
             >
                 Copy local description

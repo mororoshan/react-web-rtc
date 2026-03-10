@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../widgets/Header/Header";
 import Footer from "../widgets/Footer/Footer";
+import { ErrorBoundary } from "../shared/ui/ErrorBoundary/ErrorBoundary";
 
 const MainLayout = () => {
     return (
@@ -16,7 +17,9 @@ const MainLayout = () => {
                         "mx-auto flex h-full w-full flex-1 flex-col md:box-border md:max-w-376 md:px-8"
                     }
                 >
-                    <Outlet />
+                    <ErrorBoundary>
+                        <Outlet />
+                    </ErrorBoundary>
                 </div>
             </main>
 

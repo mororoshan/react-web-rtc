@@ -7,8 +7,8 @@ const LiquidGlassPage = (props: Props) => {
     const { bind } = useDraggable();
 
     return (
-        <div className="h-screen">
-            <section className="outline w-full h-full relative">
+        <div className="h-screen w-full bg-gray-800">
+            <section className="bg-dark-grid w-full h-full min-h-screen relative">
                 <div
                     {...bind}
                     style={{

@@ -19,9 +19,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             <button
                 ref={ref}
                 type={type}
-                className={`border border-1 px-2 py-1 rounded bg-gray-800 text-white hover:bg-gray-100 hover:text-black className ${
-                    className ? className : ""
-                }`}
+                className={`border border-1 px-2 py-1 rounded bg-gray-800 text-white hover:bg-gray-100 hover:text-black ${className ?? ""}`}
                 onClick={onClick}
                 {...rest}
             >
