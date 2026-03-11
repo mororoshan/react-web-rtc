@@ -40,7 +40,7 @@ export const GlassElement = ({
     strength,
     chromaticAberration,
     specularStrength,
-    blur = 2,
+    blur = 0,
     debug = false,
     contentBg = "transparent",
 }: GlassElementProps) => {

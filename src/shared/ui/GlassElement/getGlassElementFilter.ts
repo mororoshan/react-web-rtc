@@ -36,7 +36,7 @@ export const getDisplacementFilter = ({
         ? `
             <feImage x="0" y="0" width="${width}" height="${height}" href="${specularMapHref}" result="specularImg" />
             <feGaussianBlur in="specularImg" stdDeviation="1" result="specularBlur" />
-            <feColorMatrix in="specularBlur" type="saturate" values="${Math.max(0.1, specularStrength)}" result="specularSat" />
+            <feColorMatrix in="specularBlur" type="saturate" values="${Math.max(0.0001, specularStrength)}" result="specularSat" />
             <feBlend in="displaced" in2="specularSat" mode="screen" result="withSpecular" />`
         : "";
 
