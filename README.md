@@ -1,46 +1,43 @@
-# Getting Started with Create React App
+# react-web-rtc
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React + TypeScript application exploring **WebRTC**: peer connections, media streams, and signaling for real-time communication.
 
-## Available Scripts
+Part of a larger WebRTC stack — see also [pwa-webrtc-nodejs-react](https://github.com/mororoshan/pwa-webrtc-nodejs-react) and [pwa-nodejs-signal-server](https://github.com/mororoshan/pwa-nodejs-signal-server).
 
-In the project directory, you can run:
+## Stack
 
-### `npm start`
+- React, TypeScript
+- WebRTC API (RTCPeerConnection, media tracks)
+- Signaling over WebSocket
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Getting started
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```bash
+npm install
+npm start
+```
 
-### `npm test`
+Open [http://localhost:3000](http://localhost:3000).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+For full P2P flow, run the [signaling server](https://github.com/mororoshan/pwa-nodejs-signal-server) locally.
 
-### `npm run build`
+## Scripts
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Command | Description |
+|---------|-------------|
+| `npm start` | Dev server |
+| `npm test` | Test runner |
+| `npm run build` | Production build |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Related projects
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Repo | Role |
+|------|------|
+| [Nardy](https://github.com/mororoshan/Nardy) | Backgammon with WebRTC multiplayer |
+| [pwa-nodejs-signal-server](https://github.com/mororoshan/pwa-nodejs-signal-server) | Signaling backend |
 
-### `npm run eject`
+## Author
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Maxim Moroshan** — Frontend Developer (React, TypeScript)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+[Portfolio](https://mororoshan.github.io/me/) · [GitHub](https://github.com/mororoshan)
